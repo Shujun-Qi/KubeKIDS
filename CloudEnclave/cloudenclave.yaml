@@ -1,0 +1,20 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: user-pod
+spec:
+ 
+  securityContext:
+    fsGroup: 100
+    runAsGroup: 100
+    runAsUser: 405
+
+  restartPolicy: Never
+
+  containers:
+    - name: enclave-example
+      image: iqicheng/enclave-example
+
+
+      command: ["/bin/sh"]
+      args: ["-c", "/root/enclave/DHexchange.py"]

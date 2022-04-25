@@ -1,0 +1,44 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: user-pod
+spec:
+ 
+  securityContext:
+    fsGroup: 100
+    runAsGroup: 100
+    runAsUser: 405
+
+  restartPolicy: Never
+
+  containers:
+
+        - name: safe
+          image: iqicheng/safe:latest
+          # volumeMounts:
+          # - name: shared-data
+          #   mountPath: /pod-data
+          # command: ["tail","-f"]
+          args: ["tail", "-f","/dev/null"]
+          env:
+              - name: RIAK_IP
+                value: 128.110.155.134
+              - name: SLANG_CONF
+                value: strong/strong.conf.slang
+              - name: SLANG_SCRIPT
+                value: cloud-attestation/KubeKIDS.slang
+              - name: STRONG_ROOT_PUB
+                value: strong-1.pub
+          ports:
+              - containerPort: 7777
+
+        - name: KubeKIDSflask
+          image: iqicheng/KubeKIDS:v1
+          imagePullPolicy: Always
+         
+          env:
+            - name: SAFE_IP
+              value: localhost
+        
+          ports:
+            - containerPort: 5000
